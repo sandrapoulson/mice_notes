@@ -71,8 +71,7 @@ def start(print_progress = True):
   from collections import defaultdict
   time_delta = time.time()
   paused = False
-  
-  actions = defaultdict(list)
+
   labels = defaultdict()
   labels['a'] = 'Allogrooming'
   labels['b'] = 'Burrowing'
@@ -83,6 +82,18 @@ def start(print_progress = True):
   labels['r'] = 'Rearing'
   labels['s'] = 'Sitting'
 
+  colors = defaultdict()
+  colors['a'] = "#0000CC"
+  colors['b'] = "#FF0066"
+  colors['c'] = "#FF3399"
+  colors['g'] = "#FF99CC"
+  colors['n'] = "#0099FF"
+  colors['o'] = "#99FF66"
+  colors['r'] = "#FF66CC"
+  colors['s'] = "#9999FF"
+
+  pie_order = ('a','b','r','c','g','o','s','n')
+
   # Initialize in the 'other' state
   action_start = 0
   action_type = 'o'
@@ -90,33 +101,46 @@ def start(print_progress = True):
   # Ready stdin for reading a single key
   stdin_state = ready_stdin()
 
+  actions = defaultdict(list)
   while True:
     key = read_key(*stdin_state)
     curr_time = time.time() - time_delta
 
     if key == 'q':
+      # Finish the current action
       actions[action_type].append((action_start, curr_time))
+
+      # Summarize all of the actions
       totals = ()
       used_labels = ()
-      for char, segments in actions.items():
-        total = 0
-        for beg, end in segments:
-          total = total + (end - beg)
-        totals = totals + (total,)
-        used_labels = used_labels + (labels[char],)
-        print ''
-        print '%s (%f seconds)' % (labels[char], total)
-        print segments
+      used_colors = ()
+      for key in pie_order:
+        if key in actions:
+          segments = actions[key]
 
+          total = 0
+          for beg, end in segments:
+            total = total + (end - beg)
+          totals = totals + (total,)
+
+          print ''
+          print '%s (%f seconds)' % (labels[key], total)
+          print segments
+
+          used_labels = used_labels + (labels[key],)
+          used_colors = used_colors + (colors[key],)
+
+      # Attempt to create a pie chart using pyplot
       try:
         import matplotlib.pyplot as plt
-        plt.pie(totals, labels=used_labels, \
-        autopct='%1.1f%%', shadow=True)
+        plt.pie(totals, labels=used_labels, colors=used_colors, \
+          autopct='%1.1f%%', shadow=True)
         plt.axis('equal')
         plt.show()
       except:
         print 'WARNING: Could not import pyplot'
 
+      # Exit the while loop
       break
 
     elif key == ' ':
