@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+
+#
+#  Copyright 2016, Jack Poulson
+#  All rights reserved.
+#
+#  This file is part of mice_notes and is under the BSD 2-Clause License,
+#  which can be found in the LICENSE file in the root directory, or at
+#  http://opensource.org/licenses/BSD-2-Clause
+#
 import termios, fcntl, sys, os
 
 # The routines ready_stdin, read_key, and restore_stdin are a reformulation
@@ -155,19 +164,12 @@ def start(print_progress = True):
         print "Pausing"
 
     elif not paused:
-      if key != 'a' and \
-         key != 'b' and \
-         key != 'c' and \
-         key != 'g' and \
-         key != 'n' and \
-         key != 'o' and \
-         key != 'r' and \
-         key != 's':
-        print "WARNING: Unrecognized key of %s; changing to 'o'" % key
+      if key not in labels:
+        print "WARNING: Unrecognized key, '%s'; defaulting to 'Other'" % key
         key = 'o'
 
       if print_progress:
-        print 'Marking as %s at %f seconds' % (labels[key], curr_time)
+        print '%s at %f seconds' % (labels[key], curr_time)
 
       if action_type != key:
         actions[action_type].append((action_start, curr_time))
