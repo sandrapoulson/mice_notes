@@ -8,6 +8,7 @@
 #  which can be found in the LICENSE file in the root directory, or at
 #  http://opensource.org/licenses/BSD-2-Clause
 #
+
 import termios, fcntl, sys, os
 
 # The routines ready_stdin, read_key, and restore_stdin are a reformulation
@@ -68,7 +69,7 @@ def start(print_progress = True):
   
   'n': Nesting behavior (bringing materials or building nest)
   
-  'r': Rearing (forepaws in air)
+  'r': Rearing (forepaws in air or against wall)
   
   's': Sitting
   
@@ -84,22 +85,22 @@ def start(print_progress = True):
   labels = defaultdict()
   labels['a'] = 'Allogrooming'
   labels['b'] = 'Burrowing'
-  labels['c'] = 'Climbing'
+  labels['c'] = 'Climbing'  #not used
   labels['g'] = 'Grooming'
   labels['n'] = 'Nesting'
   labels['o'] = 'Other'
-  labels['r'] = 'Rearing'
-  labels['s'] = 'Sitting'
+  labels['r'] = 'Rearing/Climbing'
+  labels['s'] = 'Side-by-Side'
 
   colors = defaultdict()
-  colors['a'] = "#0000CC"
-  colors['b'] = "#FF0066"
-  colors['c'] = "#FF3399"
-  colors['g'] = "#FF99CC"
-  colors['n'] = "#0099FF"
-  colors['o'] = "#99FF66"
-  colors['r'] = "#FF66CC"
-  colors['s'] = "#9999FF"
+  colors['a'] = "#0000E6"
+  colors['b'] = "#FF0000"
+  colors['c'] = "#CC0000"
+  colors['g'] = "#FF8000"
+  colors['n'] = "#00B3B3"
+  colors['o'] = "#A6A6A6"
+  colors['r'] = "#FF6666"
+  colors['s'] = "#6A5ACD"
 
   pie_order = ('a','b','r','c','g','o','s','n')
 
@@ -183,3 +184,4 @@ def start(print_progress = True):
 
 if __name__ == "__main__":
   start()
+  
