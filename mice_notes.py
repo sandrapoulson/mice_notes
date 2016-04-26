@@ -63,11 +63,13 @@ def start(print_progress = True):
   
   'b': Burrowing (rummaging under bedding or other mouse)
   
-  'c': Climbing cage
+  'd': Digging near mouse
   
   'g': Grooming self
+
+  'f': Fluffing own nest
   
-  'n': Nesting behavior (bringing materials or building nest)
+  'n': Nesting behavior (bringing materials or dragging mouse)
   
   'r': Rearing (forepaws in air or against wall)
   
@@ -85,8 +87,9 @@ def start(print_progress = True):
   labels = defaultdict()
   labels['a'] = 'Allogrooming'
   labels['b'] = 'Burrowing'
-  labels['c'] = 'Climbing'  #not used
+  labels['d'] = 'Digging near mouse'  
   labels['g'] = 'Grooming'
+  labels['f'] = 'Fluffing own nest'
   labels['n'] = 'Nesting'
   labels['o'] = 'Other'
   labels['r'] = 'Rearing/Climbing'
@@ -94,15 +97,16 @@ def start(print_progress = True):
 
   colors = defaultdict()
   colors['a'] = "#0000E6"
-  colors['b'] = "#FF0000"
-  colors['c'] = "#CC0000"
+  colors['b'] = "#FF6666"
+  colors['d'] = "#00CC44"
   colors['g'] = "#FF8000"
+  colors['f'] = "#FFCC00"
   colors['n'] = "#00B3B3"
   colors['o'] = "#A6A6A6"
-  colors['r'] = "#FF6666"
+  colors['r'] = "#FF0000"
   colors['s'] = "#6A5ACD"
 
-  pie_order = ('a','b','r','c','g','o','s','n')
+  pie_order = ('a','r','b','g','f','o','d','s','n')
 
   # Initialize in the 'other' state
   action_start = 0
