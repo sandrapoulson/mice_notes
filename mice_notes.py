@@ -77,6 +77,8 @@ def start(print_progress = True):
   
   'o': Other (blank state).
 
+  'm': Pulling hair or aggressive behavior
+
   Additionally, 'q' quits and 'p' pauses/unpauses the recording process.
   """
   import time
@@ -94,6 +96,7 @@ def start(print_progress = True):
   labels['o'] = 'Other'
   labels['r'] = 'Rearing/Climbing'
   labels['s'] = 'Side-by-Side'
+  labels['m'] = 'Pulling/Aggressive'
 
   colors = defaultdict()
   colors['a'] = "#0000E6"
@@ -105,8 +108,9 @@ def start(print_progress = True):
   colors['o'] = "#A6A6A6"
   colors['r'] = "#FF0000"
   colors['s'] = "#6A5ACD"
+  colors['m'] = "#FF6633"
 
-  pie_order = ('a','r','b','g','f','o','d','s','n')
+  pie_order = ('a','r','b','m','g','f','o','d','s','n')
 
   # Initialize in the 'other' state
   action_start = 0
@@ -188,4 +192,3 @@ def start(print_progress = True):
 
 if __name__ == "__main__":
   start()
-  
