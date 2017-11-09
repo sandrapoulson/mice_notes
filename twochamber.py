@@ -1,4 +1,6 @@
-opyright 2017, Jack Poulson and Sandra Poulson
+#!/usr/bin/env python
+
+#  Copyright 2017, Jack Poulson and Sandra Poulson
 #  All rights reserved.
 #
 #  This file is part of mice_notes and is under the BSD 2-Clause License,
