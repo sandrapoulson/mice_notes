@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#  Copyright 2017, Jack Poulson and Sandra Poulson
+#  Copyright 2018, Jack Poulson and Sandra Poulson
 #  All rights reserved.
 #
 #  This file is part of mice_notes and is under the BSD 2-Clause License,
@@ -58,11 +58,11 @@ def start(print_progress = True):
   This is for recording a small number of events for two animals in a two or three chamber apparatus via
   the following keypresses:
   
-  'l': Left Chamber (animal has all four paws in the left chamber)
+  'r': Left Chamber (animal has all four paws in the left chamber)
   
   'c': Center Chamber or hallway (animal is transitioning or is in the center or hallway chamber)
   
-  'r': Right Chamber (animal has all four paws in the right chamber)
+  'l': Right Chamber (animal has all four paws in the right chamber)
   
   Additionally, 'q' quits and 'p' pauses/unpauses the recording process.
   """
@@ -72,18 +72,18 @@ def start(print_progress = True):
   paused = False
 
   labels = defaultdict()
-  labels['l'] = 'Left Chamber'
+  labels['r'] = 'Left Chamber'
   labels['c'] = 'Center'
-  labels['r'] = 'Right Chamber'  
+  labels['l'] = 'Right Chamber'  
   labels['o'] = 'Other'
 
   colors = defaultdict()
-  colors['l'] = "#00CC44"
+  colors['r'] = "#00CC44"
   colors['c'] = "#FF8000"
-  colors['r'] = "#00B3B3"
+  colors['l'] = "#00B3B3"
   colors['o'] = "#A6A6A6"
 
-  pie_order = ('l','c','r','o')
+  pie_order = ('r','c','l','o')
 
   # Initialize in the 'center' chamber
   action_start = 0

@@ -16,6 +16,7 @@ import termios, fcntl, sys, os
 #     http://stackoverflow.com/a/6599441 
 
 def ready_stdin():
+  "This is a docstring for ready_stdin..."
   fd = sys.stdin.fileno()
   flags_save = fcntl.fcntl(fd, fcntl.F_GETFL)
   attrs_save = termios.tcgetattr(fd)
@@ -79,6 +80,8 @@ def start(print_progress = True):
 
   'm': Pulling hair or aggressive behavior
 
+  'w': Paw Withdrawal or licking
+
   Additionally, 'q' quits and 'p' pauses/unpauses the recording process.
   """
   import time
@@ -97,6 +100,7 @@ def start(print_progress = True):
   labels['r'] = 'Rearing/Climbing'
   labels['s'] = 'Side-by-Side'
   labels['m'] = 'Pulling/Aggressive'
+  labels['w'] = 'Withdrawal/Attention'
 
   colors = defaultdict()
   colors['a'] = "#0000E6"
@@ -109,8 +113,9 @@ def start(print_progress = True):
   colors['r'] = "#FF0000"
   colors['s'] = "#6A5ACD"
   colors['m'] = "#FF6633"
+  colors['w'] = "#7fffd4"
 
-  pie_order = ('a','r','b','m','g','f','o','d','s','n')
+  pie_order = ('a','r','b','m','g','f','o','d','s','n','w')
 
   # Initialize in the 'other' state
   action_start = 0
