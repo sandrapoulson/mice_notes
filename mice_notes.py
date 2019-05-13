@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-#  Copyright 2016, Jack Poulson
+#  Copyright 2019, Jack Poulson
 #  All rights reserved.
 #
 #  This file is part of mice_notes and is under the BSD 2-Clause License,
@@ -10,6 +10,7 @@
 #
 
 import termios, fcntl, sys, os
+import numpy as np
 
 # The routines ready_stdin, read_key, and restore_stdin are a reformulation
 # of the following Stack Overflow answer:
@@ -60,27 +61,29 @@ def start(print_progress = True):
   This is for recording a small number of events for two mice in a cage via
   the following keypresses:
   
-  'a': Allogrooming (grooming the unconscious mouse)
+  'a': Allogrooming (grooming the other mouse)
   
   'b': Burrowing (rummaging under bedding or other mouse)
   
   'd': Digging near mouse
-  
-  'g': Grooming self
 
   'f': Fluffing own nest
   
-  'n': Nesting behavior (bringing materials or dragging mouse)
+  'n': Near (side-by-side)
   
   'r': Rearing (forepaws in air or against wall)
   
-  's': Sitting
+  's': Sniffing other
   
   'o': Other (blank state).
 
   'm': Pulling hair or aggressive behavior
 
-  'w': Paw Withdrawal or licking
+  'f': Paw flicking
+
+  'g': Paw guarding
+
+  'l': Paw licking
 
   Additionally, 'q' quits and 'p' pauses/unpauses the recording process.
   """
@@ -93,29 +96,31 @@ def start(print_progress = True):
   labels['a'] = 'Allogrooming'
   labels['b'] = 'Burrowing'
   labels['d'] = 'Digging near mouse'  
-  labels['g'] = 'Grooming'
   labels['f'] = 'Fluffing own nest'
-  labels['n'] = 'Nesting'
+  labels['n'] = 'Near'
   labels['o'] = 'Other'
   labels['r'] = 'Rearing/Climbing'
-  labels['s'] = 'Side-by-Side'
-  labels['m'] = 'Pulling/Aggressive'
-  labels['w'] = 'Withdrawal/Attention'
+  labels['s'] = 'Sniffing'
+  labels['m'] = 'TailShake/Aggressive'
+  labels['f'] = 'Paw Flicking'
+  labels['g'] = 'Paw Guarding'
+  labels['l'] = 'Paw Licking'
 
   colors = defaultdict()
   colors['a'] = "#0000E6"
   colors['b'] = "#FF6666"
   colors['d'] = "#00CC44"
-  colors['g'] = "#FF8000"
+  colors['g'] = "#808080"
   colors['f'] = "#FFCC00"
   colors['n'] = "#00B3B3"
-  colors['o'] = "#A6A6A6"
+  colors['o'] = "#FFFFFF"
   colors['r'] = "#FF0000"
   colors['s'] = "#6A5ACD"
   colors['m'] = "#FF6633"
-  colors['w'] = "#7fffd4"
+  colors['f'] = "#FF0000"
+  colors['l'] = "#008080"
 
-  pie_order = ('a','r','b','m','g','f','o','d','s','n','w')
+  pie_order = ('a','r','b','m','o','d','s','n','f','g','l')
 
   # Initialize in the 'other' state
   action_start = 0
@@ -146,9 +151,9 @@ def start(print_progress = True):
             total = total + (end - beg)
           totals = totals + (total,)
 
-          print ''
-          print '%s (%f seconds)' % (labels[key], total)
-          print segments
+          print('')
+          print('{} ({} seconds)'.format(labels[key], total))
+          print(segments)
 
           used_labels = used_labels + (labels[key],)
           used_colors = used_colors + (colors[key],)
@@ -161,7 +166,7 @@ def start(print_progress = True):
         plt.axis('equal')
         plt.show()
       except:
-        print 'WARNING: Could not import pyplot'
+        print('WARNING: Could not import pyplot')
 
       # Exit the while loop
       break
@@ -171,19 +176,19 @@ def start(print_progress = True):
         pause_time = curr_time - pause_start
         time_delta = time_delta + pause_time
         paused = False
-        print "Ended %f second pause" % pause_time
+        print('Ended {} second pause'.format(pause_time))
       else:
         pause_start = curr_time
         paused = True
-        print "Pausing"
+        print('Pausing')
 
     elif not paused:
       if key not in labels:
-        print "WARNING: Unrecognized key, '%s'; defaulting to 'Other'" % key
+        print('WARNING: Unrecognized key, "{}"; defaulting to "Other"'.format(key))
         key = 'o'
 
       if print_progress:
-        print '%s at %f seconds' % (labels[key], curr_time)
+        print('{} at {} seconds'.format(labels[key], curr_time))
 
       if action_type != key:
         actions[action_type].append((action_start, curr_time))
@@ -196,4 +201,17 @@ def start(print_progress = True):
   return actions
 
 if __name__ == "__main__":
-  start()
+  actions = start()
+
+  # We will store an event at the beginning of each interval and another for
+  # each 'granularity' seconds that the event is still continuing.
+  granularity = 0.1
+
+  chunked_actions = {}
+  for action in actions:
+    print('Chunked events for {}'.format(action))
+    chunked_actions[action] = []
+    for interval in actions[action]:
+      for time in np.arange(interval[0], interval[1], granularity): 
+        chunked_actions[action].append(time)
+    print(chunked_actions[action])
