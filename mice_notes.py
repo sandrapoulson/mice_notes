@@ -9,8 +9,42 @@
 #  http://opensource.org/licenses/BSD-2-Clause
 #
 
+from collections import defaultdict
 import termios, fcntl, sys, os
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
+import time
+
+labels = defaultdict()
+labels['a'] = 'Allogrooming'
+labels['b'] = 'Burrowing'
+labels['d'] = 'Digging near mouse'  
+labels['f'] = 'Fluffing own nest'
+labels['n'] = 'Near'
+labels['o'] = 'Other'
+labels['r'] = 'Rearing/Climbing'
+labels['s'] = 'Sniffing'
+labels['m'] = 'TailShake/Aggressive'
+labels['f'] = 'Paw Flicking'
+labels['g'] = 'Paw Guarding'
+labels['l'] = 'Paw Licking'
+
+colors = defaultdict()
+colors['a'] = "#0000E6"
+colors['b'] = "#FF6666"
+colors['d'] = "#00CC44"
+colors['g'] = "#808080"
+colors['f'] = "#FFCC00"
+colors['n'] = "#00B3B3"
+colors['o'] = "#FFFFFF"
+colors['r'] = "#FF0000"
+colors['s'] = "#6A5ACD"
+colors['m'] = "#FF6633"
+colors['f'] = "#FF0000"
+colors['l'] = "#008080"
+
+pie_order = ('a','r','b','m','o','d','s','n','f','g','l')
 
 # The routines ready_stdin, read_key, and restore_stdin are a reformulation
 # of the following Stack Overflow answer:
@@ -87,40 +121,8 @@ def start(print_progress = True):
 
   Additionally, 'q' quits and 'p' pauses/unpauses the recording process.
   """
-  import time
-  from collections import defaultdict
   time_delta = time.time()
   paused = False
-
-  labels = defaultdict()
-  labels['a'] = 'Allogrooming'
-  labels['b'] = 'Burrowing'
-  labels['d'] = 'Digging near mouse'  
-  labels['f'] = 'Fluffing own nest'
-  labels['n'] = 'Near'
-  labels['o'] = 'Other'
-  labels['r'] = 'Rearing/Climbing'
-  labels['s'] = 'Sniffing'
-  labels['m'] = 'TailShake/Aggressive'
-  labels['f'] = 'Paw Flicking'
-  labels['g'] = 'Paw Guarding'
-  labels['l'] = 'Paw Licking'
-
-  colors = defaultdict()
-  colors['a'] = "#0000E6"
-  colors['b'] = "#FF6666"
-  colors['d'] = "#00CC44"
-  colors['g'] = "#808080"
-  colors['f'] = "#FFCC00"
-  colors['n'] = "#00B3B3"
-  colors['o'] = "#FFFFFF"
-  colors['r'] = "#FF0000"
-  colors['s'] = "#6A5ACD"
-  colors['m'] = "#FF6633"
-  colors['f'] = "#FF0000"
-  colors['l'] = "#008080"
-
-  pie_order = ('a','r','b','m','o','d','s','n','f','g','l')
 
   # Initialize in the 'other' state
   action_start = 0
@@ -200,18 +202,55 @@ def start(print_progress = True):
 
   return actions
 
-if __name__ == "__main__":
-  actions = start()
+def make_eventplot_from_actions(actions, granularity=0.1, line_offset=0,
+    line_length=2, line_width=2):
+  """Plots an event plot by chunking each interval.
 
-  # We will store an event at the beginning of each interval and another for
-  # each 'granularity' seconds that the event is still continuing.
-  granularity = 0.1
+  Args:
+    actions: The dictionary from keystrokes to event interval lists.
+    granularity: The time span granularity for emitting repeated events.
+    line_offset: The vertical offset of the events.
+    line_length: The vertical height of the event bars.
+    line_width: The horizontal width of the events.
 
+  Returns:
+    Dictionary from keystrokes to lists of event instances.
+  """
+  chunked_data = []
+  chunked_colors = []
+  chunked_colors = np.zeros([0, 3])
+  linewidths = []
+  lineoffsets = []
+  linelengths = []
   chunked_actions = {}
   for action in actions:
-    print('Chunked events for {}'.format(action))
+    color_hex = colors[action]
+    red, green, blue = bytearray.fromhex(color_hex[1:])
+    color_row = [red / 255., green / 255., blue / 255.]
+    chunked_colors = np.vstack([chunked_colors, color_row])
+    linewidths.append(2)
+    lineoffsets.append(0)
+    linelengths.append(2)
+
     chunked_actions[action] = []
     for interval in actions[action]:
       for time in np.arange(interval[0], interval[1], granularity): 
         chunked_actions[action].append(time)
     print(chunked_actions[action])
+    chunked_data.append(chunked_actions[action])
+
+  plt.eventplot(chunked_data, colors=chunked_colors, lineoffsets=lineoffsets,
+      linewidths=linewidths, linelengths=linelengths)
+  plt.show() 
+
+  return chunked_actions
+
+if __name__ == "__main__":
+  actions = start()
+  granularity = 0.1
+  line_offset = 0
+  line_length = 2
+  line_width = 3
+  chunked_actions = make_eventplot_from_actions(
+      actions, granularity=granularity, line_offset=line_offset,
+      line_length=line_length, line_width=line_width)
