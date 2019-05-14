@@ -39,8 +39,8 @@ raw dictionary of action time segments can be returned. For example,
 
 ```
 import mice_notes
-first_video = mice_notes.start()
-second_video = mice_notes.start()
+first_video_actions = mice_notes.start()
+second_video_actions = mice_notes.start()
 ```
 
 would allow the data from a first video to be recorded in a dictionary named
