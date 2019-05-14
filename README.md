@@ -48,7 +48,7 @@ would allow the data from a first video to be recorded in a dictionary named
 be probed for the raw data of each action, such as
 
 ```
->>> first_video['o']
+>>> first_video_actions['o']
 [(0, 0.29196596145629883), (1.7228410243988037, 3.185948133468628)]
 ```
 
