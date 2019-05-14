@@ -51,3 +51,12 @@ be probed for the raw data of each action, such as
 >>> first_video['o']
 [(0, 0.29196596145629883), (1.7228410243988037, 3.185948133468628)]
 ```
+
+Upon closure of the pie chart, users can take the actions dictionary and input into an eventplot function to create a raster plot of the individual behaviors. This raster plot can be modified with the eventplot parameters found here:
+https://matplotlib.org/api/_as_gen/matplotlib.pyplot.eventplot.html
+https://matplotlib.org/gallery/lines_bars_and_markers/eventplot_demo.html
+
+```
+mice_notes.make_eventplot_from_actions(first_video_actions, line_width=5)
+```
+
