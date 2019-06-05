@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-#  Copyright 2019, Jack Poulson
+#  Copyright 2019, Jack Poulson, Sandra Poulson
 #  All rights reserved.
 #
 #  This file is part of mice_notes and is under the BSD 2-Clause License,
