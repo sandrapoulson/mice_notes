@@ -4,7 +4,7 @@
 #  Copyright 2019, Jack Poulson, Sandra Poulson
 #  All rights reserved.
 #
-#  This file is part of mice_notes and is under the BSD 2-Clause License,
+#  This file is part of mice_notes and is under the BSD 3-Clause License,
 #  which can be found in the LICENSE file in the root directory, or at
 #  http://opensource.org/licenses/BSD-2-Clause
 #
